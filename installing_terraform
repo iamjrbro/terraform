@@ -8,3 +8,26 @@ choco install terraform
 # checing Terraform's version
 
 terraform -v
+
+
+After that, you're going to need to connect it to your tenant using az login
+
+To run the az login command on Windows, you'll first need to install the Azure CLI. Once it's installed, you can execute the az login command to authenticate your Azure account. Here's a step-by-step guide:
+
+https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli
+Run the downloaded installer and follow the installation prompts. After that, run Powershell as admin and run the command:
+
+Invoke-WebRequest -Uri https://aka.ms/installazurecliwindows -OutFile .\AzureCLI.msi; Start-Process msiexec.exe -ArgumentList '/I AzureCLI.msi /quiet /norestart' -Wait; rm .\AzureCLI.msi
+
+# Install the Az Module
+Install-Module -Name Az -AllowClobber
+
+# Connect to your Azure account:
+Connect-AzAccount
+
+# Than you can run azure login:
+az login
+
+# In case it does not work, run it with your tenant ID
+Connect-AzAccount -TenantId tenantIdCode
+
