@@ -13,3 +13,6 @@ Test-Path C:\ProgramData\chocolatey\bin\choco.exe
 $env:PATH += ";C:\ProgramData\chocolatey\bin"
 
 than you can follow to the installing_terraform archieve: https://github.com/iamjrbro/terraform/blob/main/installing_terraform
+
+
+https://docs.chocolatey.org/en-us/choco/uninstallation/
