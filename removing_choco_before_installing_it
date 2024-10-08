@@ -1,0 +1,15 @@
+#removing it
+Remove-Item -Recurse -Force C:\ProgramData\chocolatey
+
+#reintalling it
+Set-ExecutionPolicy Bypass -Scope Process -Force;
+[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12;
+Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+#verifing intallation
+Test-Path C:\ProgramData\chocolatey\bin\choco.exe
+
+#adding it to the right path
+$env:PATH += ";C:\ProgramData\chocolatey\bin"
+
+than you can follow to the installing_terraform archieve: https://github.com/iamjrbro/terraform/blob/main/installing_terraform
