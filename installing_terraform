@@ -31,3 +31,8 @@ az login
 # In case it does not work, run it with your tenant ID
 Connect-AzAccount -TenantId tenantIdCode
 
+
+If you cannot find your tenant ID, log into Azure Portal, open a shell and run:
+
+az account list
+
