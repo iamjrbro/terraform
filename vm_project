@@ -42,7 +42,7 @@ resource "azurerm_network_security_group" "nsg-test" {
 }
 
 # Create Public IP
-resource "azurerm_public_ip" "pip-tftec" {
+resource "azurerm_public_ip" "pip-test" {
   name                = "pip-test-from-terraform"
   location            = azurerm_resource_group.rg-test.location
   resource_group_name = azurerm_resource_group.rg-test.name
@@ -80,7 +80,7 @@ resource "azurerm_virtual_machine" "vm-test" {
   }
 
   storage_os_disk {
-    name              = "osdisk-tftec-from-terraform"
+    name              = "osdisk-test-from-terraform"
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
