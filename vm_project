@@ -63,7 +63,7 @@ resource "azurerm_network_interface" "nic-test" {
   }
 }
 
-# Create Virtual Machine Linux
+# Create Virtual Machine Windows
 resource "azurerm_virtual_machine" "vm-test" {
   name                  = "vm-test-from-terraform"
   location              = azurerm_resource_group.rg-test.location
