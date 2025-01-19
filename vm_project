@@ -1,69 +1,64 @@
 MAIN
 
-# Create Resource Group
 resource "azurerm_resource_group" "rg-test" {
-  name     = "rg-test-from-terraform"
-  location = "centralus"
+    name = "rg-test-from-terraform"
+    location = "centralus"
 }
 
-# Create Virtual Network (VNet)
 resource "azurerm_virtual_network" "vnet-test" {
-  name                = "vnet-test-from-terraform"
-  address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.rg-test.location
-  resource_group_name = azurerm_resource_group.rg-test.name
+    name = "vnet-test-from-terraform"
+    address_space = [ "10.0.0.0/16" ]
+    location = azurerm_resource_group.rg-test.location
+    resource_group_name = azurerm_resource_group.rg-test.name
+
 }
 
-# Create subnet on VNet
 resource "azurerm_subnet" "sub-test" {
-  name                 = "sub-test-from-terraform"
-  resource_group_name  = azurerm_resource_group.rg-test.name
-  address_prefixes     = ["10.0.1.0/24"]
-  virtual_network_name = azurerm_virtual_network.vnet-test.name
+    name = "sub-test-from-terraform"
+    resource_group_name = azurerm_resource_group.rg-test.name
+    address_prefixes = [ "10.0.1/24" ]
+    virtual_network_name = azurerm_virtual_network.vnet-test.name 
 }
 
-# Create Network Security Group (NSG)
 resource "azurerm_network_security_group" "nsg-test" {
-  name                = "nsg-test-from-terraform"
-  location            = azurerm_resource_group.rg-test.location
-  resource_group_name = azurerm_resource_group.rg-test.name
+    name = "nsg-test-from-terraform"
+    location = azurerm_resource_group.rg-test.location
+    resource_group_name = azurerm_resource_group.rg-test.name
 
-  security_rule {
-    name                       = "SSH"
-    priority                   = 1001
-    direction                  = "Inbound"
-    access                     = "Allow"
-    protocol                   = "Tcp"
-    source_port_range          = "*"
-    destination_port_range     = "22"
-    source_address_prefix      = "*"
-    destination_address_prefix = "*"
-  }
+    security_rule {
+        name = "SSH"
+        priority = 1001
+        direction = "Inbound"
+        access = "Allow"
+        protocol = "TCP"
+        source_port_ranges = "*"
+        source_port_range = "22"
+        source_address_prefix = "*"
+        destination_address_prefix = "*"
+    }
 }
 
-# Create Public IP
-resource "azurerm_public_ip" "pip-test" {
-  name                = "pip-test-from-terraform"
-  location            = azurerm_resource_group.rg-test.location
+resource "azure_public_ip" "pip-test" {
+  name = "pip-test-from-terraform"
+  location = azurerm_resource_group.rg-test.location
   resource_group_name = azurerm_resource_group.rg-test.name
-  allocation_method   = "Static"
+  allocation_method = "Static"
+
 }
 
-# Create Network Internface
 resource "azurerm_network_interface" "nic-test" {
-  name                = "nic-test-from-terraform"
-  location            = azurerm_resource_group.rg-test.location
-  resource_group_name = azurerm_resource_group.rg-test.name
+    name = "nic-test-from-terraform"
+    location = azurerm_resource_group.rg-test.location
+    resource_group_name = azurerm_resource_group.rg-test.name
 
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.sub-test.id
-    private_ip_address_allocation = "Dynamic"
-    public_ip_address_id          = azurerm_public_ip.pip-test.id
-  }
+    ip_configuration {
+      name = "internal"
+      subnet_id = "azure_subnet.sub-test.id"
+      private_ip_address_allocation = "Dynamic"
+      public_ip_address_id = azurerm_public_ip.pip-test.id
+      }
 }
 
-# Create Virtual Machine Windows
 resource "azurerm_virtual_machine" "vm-test" {
   name                  = "vm-test-from-terraform"
   location              = azurerm_resource_group.rg-test.location
@@ -71,7 +66,6 @@ resource "azurerm_virtual_machine" "vm-test" {
   network_interface_ids = [azurerm_network_interface.nic-test.id]
   vm_size               = "Standard_DS1_v2"
 
-  
   storage_image_reference {
     publisher = "MicrosoftWindowsServer"
     offer     = "WindowsServer"
@@ -84,6 +78,12 @@ resource "azurerm_virtual_machine" "vm-test" {
     caching           = "ReadWrite"
     create_option     = "FromImage"
     managed_disk_type = "Standard_LRS"
+  }
+
+  os_profile {
+    computer_name  = "vm-test"
+    admin_username = "adminuser"
+    admin_password = "P@ssw0rd123!"
   }
 
   os_profile_windows_config {
